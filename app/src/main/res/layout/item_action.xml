@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="15dp"
+    android:orientation="vertical">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/position_param"
+            android:layout_width="wrap_content"
+            android:layout_height="35dp"
+            android:background="@null"
+            android:gravity="center"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp"
+            android:text="@string/position_param"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="Autofill,LabelFor,TextFields" />
+
+        <Spinner
+            android:id="@+id/action_param"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@null"
+            android:hint="@string/action"
+            android:inputType="text"
+            android:textAlignment="center"
+            android:textColor="@color/colorAccent"
+            app:layout_constraintStart_toEndOf="@+id/position_param"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/delete_action"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:src="@drawable/ic_delete"
+            android:layout_marginEnd="5dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="ContentDescription" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="35dp"
+                android:text="@string/x_coord"
+                android:textSize="18sp"/>
+            <EditText
+                android:id="@+id/x_param"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="15dp"
+                android:hint="@string/x_coord_hint"
+                android:inputType="number"
+                android:textAlignment="center"
+                android:textColor="@color/colorAccent"
+                tools:ignore="Autofill" />
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="35dp"
+                android:text="@string/y_coord"
+                android:textSize="18sp"/>
+            <EditText
+                android:id="@+id/y_param"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:hint="@string/y_coord_hint"
+                android:inputType="number"
+                android:textAlignment="center"
+                android:textColor="@color/colorAccent"
+                tools:ignore="Autofill" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/swipe_params"
+            android:layout_marginStart="30dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="35dp"
+                android:text="@string/x1_coord"
+                android:textSize="18sp"/>
+            <EditText
+                android:id="@+id/x1_param"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="15dp"
+                android:hint="@string/x1_coord_hint"
+                android:inputType="number"
+                android:layout_gravity="center"
+                android:textAlignment="center"
+                android:textColor="@color/colorAccent"
+                tools:ignore="Autofill" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="35dp"
+                android:text="@string/y1_coord"
+                android:textSize="18sp"/>
+            <EditText
+                android:id="@+id/y1_param"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:hint="@string/y1_coord_hint"
+                android:inputType="number"
+                android:textAlignment="center"
+                android:textColor="@color/colorAccent"
+                tools:ignore="Autofill" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp">
+
+        <androidx.appcompat.widget.AppCompatCheckBox
+            android:id="@+id/loop_param"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="10dp"
+            android:text="@string/is_loop"
+            android:textColor="@color/colorAccent" />
+
+        <androidx.appcompat.widget.AppCompatCheckBox
+            android:id="@+id/enable_param"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="10dp"
+            android:text="@string/is_enable"
+            android:textColor="@color/colorAccent" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="35dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="3dp"
+            android:text="@string/repeat_count"
+            android:textSize="18sp"/>
+        <EditText
+            android:id="@+id/repeat_param"
+            android:layout_width="wrap_content"
+            android:layout_height="35dp"
+            android:maxWidth="40dp"
+            android:layout_marginEnd="10dp"
+            android:background="@null"
+            android:inputType="number"
+            android:textColor="@color/colorAccent"
+            tools:ignore="Autofill,LabelFor" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="35dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="5dp"
+            android:text="@string/start_delay"
+            android:textSize="18sp"/>
+        <EditText
+            android:id="@+id/start_delay_param"
+            android:layout_width="wrap_content"
+            android:layout_height="35dp"
+            android:maxWidth="40dp"
+            android:layout_marginEnd="10dp"
+            android:background="@null"
+            android:inputType="number"
+            android:textColor="@color/colorAccent"
+            tools:ignore="Autofill,LabelFor" />
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="35dp"
+            android:layout_marginEnd="3dp"
+            android:layout_marginStart="10dp"
+            android:text="@string/duration"
+            android:textSize="18sp"/>
+        <EditText
+            android:id="@+id/duration_param"
+            android:layout_width="wrap_content"
+            android:layout_height="35dp"
+            android:maxWidth="40dp"
+            android:layout_marginEnd="30dp"
+            android:background="@null"
+            android:inputType="number"
+            android:textColor="@color/colorAccent"
+            tools:ignore="Autofill,LabelFor" />
+
+    </LinearLayout>
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:src="@drawable/line"
+        tools:ignore="ContentDescription" />
+</LinearLayout>

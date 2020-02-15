@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorAccent">#D81B60</color>
+    <color name="colorPortlandOrange">#F46036</color>
+    <color name="colorRuddyBrown">#BC5D2E</color>
+    <color name="colorGunmetal">#2E2E3A</color>
+    <color name="jet">#383433</color>
+    <color name="blackOlive">#3F3F3B</color>
+    <color name="outerSpace">#49494D</color>
+    <color name="mintCream">#F4FFF8</color>
+    <color name="maastricthBlue">#022B3A</color>
+    <color name="grayAsparagus">#415E40</color>
+</resources>

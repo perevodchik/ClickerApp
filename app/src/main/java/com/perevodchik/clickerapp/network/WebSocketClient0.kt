@@ -6,6 +6,7 @@ import com.perevodchik.clickerapp.logwtf
 import io.netty.bootstrap.Bootstrap
 import io.netty.channel.Channel
 import io.netty.channel.ChannelInitializer
+import io.netty.channel.ChannelOption
 import io.netty.channel.EventLoopGroup
 import io.netty.channel.nio.NioEventLoopGroup
 import io.netty.channel.socket.SocketChannel
@@ -21,12 +22,17 @@ import io.netty.handler.codec.http.websocketx.extensions.compression.WebSocketCl
 import io.netty.handler.ssl.SslContext
 import io.netty.handler.ssl.SslContextBuilder
 import io.netty.handler.ssl.util.InsecureTrustManagerFactory
+import io.netty.handler.timeout.ReadTimeoutHandler
+import io.netty.handler.timeout.WriteTimeoutHandler
+import java.lang.Exception
 import java.net.URI
+import java.util.concurrent.TimeUnit
 
 
 class WebSocketClient0 {
 
     companion object {
+        var isForceStopped = false
         var isRunning = false
         var isAuthorized= false
         var url = ""
@@ -48,13 +54,20 @@ class WebSocketClient0 {
         }
 
         fun connect(message: String = "", isLogin: Boolean = false) {
-            Thread {
-                val ws = WebSocketClient0()
-                ws.connect0(message, isLogin)
-            }.apply { start() }
+            try {
+                Thread {
+                    val ws = WebSocketClient0()
+                    isForceStopped = false
+                    ws.connect0(message, isLogin)
+                }.apply { start() }
+            } catch(exx: Exception) {
+                disconnect()
+                connect(message, isLogin)
+            }
         }
 
         fun disconnect() {
+            isForceStopped = true
             channel?.close()
 //            channel?.writeAndFlush(CloseWebSocketFrame())
 //            channel?.closeFuture()?.sync()
@@ -112,7 +125,10 @@ class WebSocketClient0 {
                    channel(NioSocketChannel::class.java)
                    handler(object : ChannelInitializer<SocketChannel>() {
                        override fun initChannel(ch: SocketChannel) {
-                           val p = ch.pipeline()
+                           val p = ch.pipeline().apply {
+                               addFirst("write_timeout", WriteTimeoutHandler(6, TimeUnit.HOURS))
+                               addFirst("read_timeout", ReadTimeoutHandler(6, TimeUnit.HOURS))
+                           }
                            if (sslCtx != null) {
                                p.addLast(sslCtx.newHandler(ch.alloc(), host, port))
                            }
@@ -125,6 +141,7 @@ class WebSocketClient0 {
                        }
                    })
                }
+               b.option(ChannelOption.SO_KEEPALIVE, true)
                channel = b.connect(uri.host, port).sync().channel()
                handler.handshakeFuture()?.sync()
 

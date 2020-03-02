@@ -249,70 +249,74 @@ class ClickerService : AccessibilityService() {
     }
 
     private fun startZero(i: ListIterator<Action>, _action: Action?, counter: Int = 0) {
-        if (!isRunning) return
-        if (_action != null && (counter > 1 || _action.loop)) {
-            _action.loge("STATE>START_ZERO")
+//        try {
+            if (!isRunning) return
+            if (_action != null && (counter > 1 || _action.loop)) {
+                _action.loge("STATE>START_ZERO")
 
-            if(!checkTime()) {
-                return
-            }
-
-            val g: GestureDescription.Builder = when (_action.action) {
-                "double tap" -> doubleClick(_action)
-                "tap" -> click(_action)
-                "swipe" -> swipe(_action)
-                else -> click(_action)
-            }
-
-            clickerService?.dispatchGesture(g.build(), object : GestureResultCallback() {
-                override fun onCompleted(gestureDescription: GestureDescription?) {
-                    super.onCompleted(gestureDescription)
-                    if (counter > 0)
-                        startZero(i, _action, if (_action.loop) counter else counter - 1)
+                if(!checkTime()) {
+                    return
                 }
-            }, null)
 
-        } else if (i.hasNext()) {
-            if(!checkTime()) {
-                clear()
-                return
-            }
-            val action = i.next()
-            if (!action.enable) {
-                startZero(i, null)
-            } else {
-
-                val g: GestureDescription.Builder = when (action.action) {
-                    "double tap" -> doubleClick(action)
-                    "click" -> click(action)
-                    "swipe" -> swipe(action)
-                    else -> click(action)
+                val g: GestureDescription.Builder = when (_action.action) {
+                    "double tap" -> doubleClick(_action)
+                    "tap" -> click(_action)
+                    "swipe" -> swipe(_action)
+                    else -> click(_action)
                 }
 
                 clickerService?.dispatchGesture(g.build(), object : GestureResultCallback() {
                     override fun onCompleted(gestureDescription: GestureDescription?) {
                         super.onCompleted(gestureDescription)
-                        startZero(i, action, action.repeat)
+                        if (counter > 0)
+                            startZero(i, _action, if (_action.loop) counter else counter - 1)
                     }
                 }, null)
-            }
-        } else {
-            PreviewTapService.previewService?.toggleFlags(1)
-            if(isTest) {
-                PreviewTapService.previewService?.toggleColor(true)
-                return
-            }
-            if (checkTime()) {
-                "repeat pattern".logi("STATE")
-                val iterator = map0.keys.sortedBy { it.position }.listIterator()
-                startZero(iterator, null)
+
+            } else if (i.hasNext()) {
+                if(!checkTime()) {
+                    clear()
+                    return
+                }
+                val action = i.next()
+                if (!action.enable) {
+                    startZero(i, null)
+                } else {
+
+                    val g: GestureDescription.Builder = when (action.action) {
+                        "double tap" -> doubleClick(action)
+                        "click" -> click(action)
+                        "swipe" -> swipe(action)
+                        else -> click(action)
+                    }
+
+                    clickerService?.dispatchGesture(g.build(), object : GestureResultCallback() {
+                        override fun onCompleted(gestureDescription: GestureDescription?) {
+                            super.onCompleted(gestureDescription)
+                            startZero(i, action, action.repeat)
+                        }
+                    }, null)
+                }
             } else {
-                (getSystemService(Activity.ACTIVITY_SERVICE) as ActivityManager).killBackgroundProcesses(LIVE_ME_PACKAGE)
-                Toast.makeText(clickerService!!, "Pattern end", Toast.LENGTH_SHORT)
-                    .show()
-                clickerService?.clear()
+                PreviewTapService.previewService?.toggleFlags(1)
+                if(isTest) {
+                    PreviewTapService.previewService?.toggleColor(true)
+                    return
+                }
+                if (checkTime()) {
+                    "repeat pattern".logi("STATE")
+                    val iterator = map0.keys.sortedBy { it.position }.listIterator()
+                    startZero(iterator, null)
+                } else {
+                    (getSystemService(Activity.ACTIVITY_SERVICE) as ActivityManager).killBackgroundProcesses(LIVE_ME_PACKAGE)
+                    Toast.makeText(clickerService!!, "Pattern end", Toast.LENGTH_SHORT)
+                        .show()
+                    clickerService?.clear()
+                }
             }
-        }
+//        } catch(ex: Exception) {
+//            Logger.writeLog(this, ex.localizedMessage ?: "perform click error")
+//        }
     }
 
     @SuppressLint("SetTextI18n")
@@ -406,7 +410,6 @@ class ClickerService : AccessibilityService() {
         clickerService = null
         return super.onUnbind(intent)
     }
-
 
     override fun onDestroy() {
         "AutoClickService onDestroy".loge()

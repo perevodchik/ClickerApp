@@ -33,6 +33,16 @@ class WebSocketClientHandler(handshaker0: WebSocketClientHandshaker): SimpleChan
         super.channelActive(ctx)
     }
 
+    override fun channelInactive(ctx: ChannelHandlerContext?) {
+        super.channelInactive(ctx)
+        if(!WebSocketClient0.isForceStopped) WebSocketClient0.connect(isLogin = true)
+    }
+
+    override fun channelUnregistered(ctx: ChannelHandlerContext?) {
+        super.channelUnregistered(ctx)
+        if(!WebSocketClient0.isForceStopped) WebSocketClient0.connect(isLogin = true)
+    }
+
     @Throws(Exception::class)
     override fun channelRead0(ctx: ChannelHandlerContext, msg: Any?) {
         val ch = ctx.channel()
@@ -46,12 +56,6 @@ class WebSocketClientHandler(handshaker0: WebSocketClientHandshaker): SimpleChan
                 handshakeFuture!!.setFailure(e)
             }
             return
-        }
-        if (msg is FullHttpResponse) {
-            throw IllegalStateException(
-                "Unexpected FullHttpResponse (getStatus=" + msg.status() +
-                        ", content=" + msg.content().toString(CharsetUtil.UTF_8) + ')'
-            )
         }
 
         when (val frame = msg as WebSocketFrame?) {
@@ -79,8 +83,9 @@ class WebSocketClientHandler(handshaker0: WebSocketClientHandshaker): SimpleChan
                             ClickerService.clickerService?.addBase(base)
                     }
                 }
-
-//                ("WebSocket Client received message: " + frame.text()).logwtf()
+            }
+            is PingWebSocketFrame -> {
+                "pong".logwtf("ping")
             }
             is PongWebSocketFrame -> {
                 "WebSocket Client received pong".logwtf()

@@ -13,10 +13,7 @@ import android.util.DisplayMetrics
 import android.view.accessibility.AccessibilityManager
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.perevodchik.clickerapp.DbHelper
-import com.perevodchik.clickerapp.R
-import com.perevodchik.clickerapp.logd
-import com.perevodchik.clickerapp.loge
+import com.perevodchik.clickerapp.*
 import com.perevodchik.clickerapp.network.WebSocketClient0
 import com.perevodchik.clickerapp.service.PreviewTapService
 import com.perevodchik.clickerapp.service.UiClickService
@@ -87,8 +84,12 @@ class MainActivity : AppCompatActivity() {
                 startMyService()
         }
 
+        write_log.setOnClickListener {
+//            Logger.readLog(this)
+        }
+
         // инициализация бд
-        val d = DbHelper(this)
+        DbHelper(this)
         // интент с соверлей сервисом
         overlayControlService = Intent(this, UiClickService::class.java)
 
@@ -135,46 +136,12 @@ class MainActivity : AppCompatActivity() {
                 haveAlertPermission = Settings.canDrawOverlays(this)
                 showToast(if (haveOverlayPermission) "Yay overlay!" else "No alert permission :(")
             }
-//            USAGE_STATS_PERMISSION_REQUEST_CODE -> {
-//                haveStatsPermission = checkUsageStatsPermission()
-//                showToast(if (haveStatsPermission) "Yay stats!" else "No stats permission :(")
-//
-//            }
         }
     }
 
     private fun requestPermissions() {
         requestOverlayPermission()
 //        requestUsageStatsPermission()
-    }
-
-    /**
-     * Usage stats permission request logic
-     */
-    private fun requestUsageStatsPermission() {
-        if (!checkUsageStatsPermission()) {
-            val dialogBuilder = AlertDialog.Builder(this)
-            dialogBuilder.apply {
-                setMessage(R.string.usage_stats_request)
-                setCancelable(false)
-                setNegativeButton(R.string.action_refuse) { dialog, _ ->
-                    dialog.dismiss()
-                    finish()
-                }
-                setPositiveButton(R.string.action_proceed) { dialog, _ ->
-                    dialog.dismiss()
-                    val intent = Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS)
-                    startActivityForResult(intent,
-                        USAGE_STATS_PERMISSION_REQUEST_CODE
-                    )
-                }
-            }
-            dialogBuilder.create().show()
-        } else {
-            haveStatsPermission = true
-            showToast("Yay overlay stats!")
-
-        }
     }
 
     /**

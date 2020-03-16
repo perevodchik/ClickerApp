@@ -55,18 +55,22 @@ class WebSocketClient0 {
 
         fun connect(message: String = "", isLogin: Boolean = false) {
             try {
+                "start connect".loge()
                 Thread {
                     val ws = WebSocketClient0()
                     isForceStopped = false
+                    "connect".loge()
                     ws.connect0(message, isLogin)
                 }.apply { start() }
             } catch(exx: Exception) {
+                "catch disconnect".loge()
                 disconnect()
                 connect(message, isLogin)
             }
         }
 
         fun disconnect() {
+            channel?.writeAndFlush(CloseWebSocketFrame())
             isForceStopped = true
             channel?.close()
 //            channel?.writeAndFlush(CloseWebSocketFrame())
@@ -81,7 +85,8 @@ class WebSocketClient0 {
     @SuppressLint("DefaultLocale")
     fun connect0(message: String = "", isLogin: Boolean = false) {
        try {
-           val uri = URI(System.getProperty("url", url)!!)
+           "start connect0".loge()
+           val uri = URI(System.getProperty("url", "ws://195.201.109.34:1488/ws" /*url*/)!!)
            val scheme = if (uri.scheme == null) "ws" else uri.scheme
            val host = if (uri.host == null) "195.201.109.34" else uri.host
            val port: Int
@@ -100,11 +105,13 @@ class WebSocketClient0 {
                }
            } else uri.port
 
+           "start connect1".loge()
            if (!"ws".equals(scheme, ignoreCase = true) && !"wss".equals(scheme, ignoreCase = true)) {
                System.err.println("Only WS(S) is supported.")
                return
            }
 
+           "start connect2".loge()
            val ssl = "wss".equals(scheme, ignoreCase = true)
            val sslCtx: SslContext?
            sslCtx = if (ssl) {
@@ -112,6 +119,7 @@ class WebSocketClient0 {
                    .trustManager(InsecureTrustManagerFactory.INSTANCE).build()
            } else null
 
+           "start connect3".loge()
            val group: EventLoopGroup = NioEventLoopGroup()
            try {
                val handler =
@@ -141,22 +149,26 @@ class WebSocketClient0 {
                        }
                    })
                }
+               "start connect4".loge()
                b.option(ChannelOption.SO_KEEPALIVE, true)
                channel = b.connect(uri.host, port).sync().channel()
                handler.handshakeFuture()?.sync()
+               "start connect5".loge()
 
                if(message.isNotEmpty())
                    channel?.writeAndFlush(TextWebSocketFrame(message))
                if(isLogin)
                    login0(channel)
 
+               "start connect6".loge()
                handler.handshakeFuture()?.channel()?.closeFuture()?.sync()
-               isRunning = true
+               "start connect7".loge()
            } finally {
+               "start connect0 finally".loge()
                group.shutdownGracefully()
            }
        } catch(exxx: IllegalArgumentException) {
-           exxx.localizedMessage.loge("IllegalArgumentException")
+           exxx.printStackTrace().loge("IllegalArgumentException")
        }
     }
 

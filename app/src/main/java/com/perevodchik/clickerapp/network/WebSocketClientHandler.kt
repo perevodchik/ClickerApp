@@ -29,18 +29,21 @@ class WebSocketClientHandler(handshaker0: WebSocketClientHandshaker): SimpleChan
     }
 
     override fun channelActive(ctx: ChannelHandlerContext) {
+        "channelActive".loge()
         handshaker!!.handshake(ctx.channel())
         super.channelActive(ctx)
     }
 
     override fun channelInactive(ctx: ChannelHandlerContext?) {
         super.channelInactive(ctx)
-        if(!WebSocketClient0.isForceStopped) WebSocketClient0.connect(isLogin = true)
+        "channelInactive".loge()
+//        if(!WebSocketClient0.isForceStopped) WebSocketClient0.connect(isLogin = true)
     }
 
     override fun channelUnregistered(ctx: ChannelHandlerContext?) {
         super.channelUnregistered(ctx)
-        if(!WebSocketClient0.isForceStopped) WebSocketClient0.connect(isLogin = true)
+        "channelUnregistered".loge()
+//        if(!WebSocketClient0.isForceStopped) WebSocketClient0.connect(isLogin = true)
     }
 
     @Throws(Exception::class)
@@ -101,6 +104,7 @@ class WebSocketClientHandler(handshaker0: WebSocketClientHandshaker): SimpleChan
     }
 
     override fun exceptionCaught(ctx: ChannelHandlerContext, cause: Throwable) {
+        "exceptionCaught".loge()
         cause.printStackTrace()
         if (!handshakeFuture!!.isDone) {
             handshakeFuture!!.setFailure(cause)
